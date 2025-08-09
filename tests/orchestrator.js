@@ -7,6 +7,8 @@ import user from "../models/user.js";
 import session from "../models/session.js";
 import email from "infra/email.js";
 
+const mailServerUrl = "http://localhost:5556";
+
 async function waitForAllServices() {
   await waitForWebServer();
   await waitForMailServer();
@@ -22,7 +24,7 @@ async function waitForAllServices() {
     }
 
     async function fetchStatusPage() {
-      const response = await fetch("http://localhost:8025");
+      const response = await fetch(mailServerUrl);
 
       if (response.status !== 200) {
         throw Error();
@@ -68,7 +70,7 @@ async function createSession(userId) {
 }
 
 async function getLastEmail() {
-  const response = await fetch(`http://localhost:8025/api/v1/message/latest`);
+  const response = await fetch(`${mailServerUrl}/api/v1/message/latest`);
 
   console.log(response.ok);
   if (!response.ok) return null;
@@ -83,7 +85,7 @@ async function getLastEmail() {
 }
 
 async function cleanEmail() {
-  await fetch(`http://localhost:8025/api/v1/messages`, { method: "DELETE" });
+  await fetch(`${mailServerUrl}/api/v1/messages`, { method: "DELETE" });
 }
 
 const orchestrator = {
