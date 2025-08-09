@@ -19,3 +19,9 @@ jobs:
       - run: npm ci
 
       - run: npm test
+        env:
+          POSTGRES_HOST: database
+          POSTGRES_PORT: 5432
+          EMAIL_SMTP_HOST: mail
+          EMAIL_SMTP_PORT: 1025
+          EMAIL_HTTP_PORT: 8025

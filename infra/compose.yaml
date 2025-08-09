@@ -6,9 +6,9 @@ services:
       - ../.env.development
     ports:
       - "5555:5432"
-  mailpit:
+  mail:
     image: axllent/mailpit
-    container_name: mailpit
+    container_name: mail
     restart: unless-stopped
     volumes:
       - mailpit:/data

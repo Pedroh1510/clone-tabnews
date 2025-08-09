@@ -7,7 +7,7 @@ import user from "../models/user.js";
 import session from "../models/session.js";
 import email from "infra/email.js";
 
-const mailServerUrl = "http://localhost:5556";
+const mailServerUrl = `http://${process.env.EMAIL_SMTP_HOST}:${process.env.EMAIL_HTTP_PORT}`;
 
 async function waitForAllServices() {
   await waitForWebServer();
