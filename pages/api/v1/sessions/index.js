@@ -1,7 +1,7 @@
 import { createRouter } from "next-connect";
-import controller from "../../../../infra/controller.js";
-import authentication from "../../../../models/authentication.js";
-import session from "../../../../models/session.js";
+import controller from "infra/controller.js";
+import authentication from "models/authentication.js";
+import session from "models/session.js";
 
 const router = createRouter();
 
