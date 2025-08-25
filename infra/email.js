@@ -10,9 +10,9 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function send({ to, subject, body, html }) {
+async function send({ from, to, subject, body, html }) {
   const info = await transporter.sendMail({
-    from: `"Service Team" <${process.env.EMAIL_SMTP_FROM}>`,
+    from,
     to,
     subject,
     text: body,
