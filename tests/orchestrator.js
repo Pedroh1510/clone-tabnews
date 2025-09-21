@@ -72,7 +72,6 @@ async function createSession(userId) {
 async function getLastEmail() {
   const response = await fetch(`${mailServerUrl}/api/v1/message/latest`);
 
-  console.log(response.ok);
   if (!response.ok) return null;
   const content = await response.json();
 
