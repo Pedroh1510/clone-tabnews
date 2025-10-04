@@ -40,6 +40,7 @@ describe("GET /api/v1/user", () => {
         password: createdUser.password,
         created_at: createdUser.created_at.toISOString(),
         updated_at: createdUser.updated_at.toISOString(),
+        features: [],
       });
 
       expect(uuidVersion(responseBody.id)).toBe(4);
@@ -102,6 +103,7 @@ describe("GET /api/v1/user", () => {
         password: createdUser.password,
         created_at: createdUser.created_at.toISOString(),
         updated_at: createdUser.updated_at.toISOString(),
+        features: [],
       });
 
       expect(uuidVersion(responseBody.id)).toBe(4);
