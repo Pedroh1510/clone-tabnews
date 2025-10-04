@@ -120,7 +120,7 @@ describe("PATCH /api/v1/users/[username]", () => {
         id: responseBody.id,
         username: "uniqueUser2",
         email: createdUser.email,
-        features: [],
+        features: ["read:activation_token"],
         password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
@@ -161,7 +161,7 @@ describe("PATCH /api/v1/users/[username]", () => {
         password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
-        features: [],
+        features: ["read:activation_token"],
       });
 
       expect(uuidVersion(responseBody.id)).toBe(4);
@@ -200,7 +200,7 @@ describe("PATCH /api/v1/users/[username]", () => {
         password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
-        features: [],
+        features: ["read:activation_token"],
       });
 
       expect(uuidVersion(responseBody.id)).toBe(4);
