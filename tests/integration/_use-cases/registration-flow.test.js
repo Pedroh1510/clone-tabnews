@@ -1,12 +1,16 @@
+import webserver from "infra/webserver.js";
+import activation from "models/activation.js";
 import orchestrator from "tests/orchestrator.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
   await orchestrator.clearDatabase();
+  await orchestrator.cleanEmail();
   await orchestrator.runPendingMigrations();
 });
 
 describe("Use case: Registration Flow(all successful)", () => {
+  let createUseResponseBody;
   test("Create user account", async () => {
     const response = await fetch("http://localhost:3000/api/v1/users", {
       method: "POST",
@@ -22,19 +26,37 @@ describe("Use case: Registration Flow(all successful)", () => {
 
     expect(response.status).toBe(201);
 
-    const responseBody = await response.json();
+    createUseResponseBody = await response.json();
 
-    expect(responseBody).toEqual({
-      id: responseBody.id,
+    expect(createUseResponseBody).toEqual({
+      id: createUseResponseBody.id,
       username: "RegistrationFlow",
       email: "registration.flow@curso.dev",
-      password: responseBody.password,
-      created_at: responseBody.created_at,
-      updated_at: responseBody.updated_at,
+      password: createUseResponseBody.password,
+      created_at: createUseResponseBody.created_at,
+      updated_at: createUseResponseBody.updated_at,
       features: ["read:activation_token"],
     });
   });
-  test("Receive activation email", async () => {});
+  test("Receive activation email", async () => {
+    const lastEmail = await orchestrator.getLastEmail();
+
+    expect(lastEmail.from?.address).toBe("contato@curso.dev");
+    expect(lastEmail.to[0]?.address).toBe("registration.flow@curso.dev");
+    expect(lastEmail.subject).toBe("Ative seu cadastro no FinTab!");
+    expect(lastEmail.content).toContain("RegistrationFlow");
+
+    const activationTokenId = orchestrator.extractUUID(lastEmail.content);
+
+    expect(lastEmail.content).toContain(
+      `${webserver.origin}/cadastro/ativar/${activationTokenId}`,
+    );
+
+    const activationToken =
+      await activation.findOneValidById(activationTokenId);
+    expect(activationToken.user_id).toEqual(createUseResponseBody.id);
+    expect(activationToken.used_at).toBe(null);
+  });
   test("Activate account", async () => {});
   test("Login", async () => {});
   test("Get user information", async () => {});

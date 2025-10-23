@@ -87,6 +87,13 @@ async function cleanEmail() {
   await fetch(`${mailServerUrl}/api/v1/messages`, { method: "DELETE" });
 }
 
+function extractUUID(text) {
+  const match = text.match(
+    "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+  );
+  return match[0] || null;
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
@@ -95,6 +102,7 @@ const orchestrator = {
   createSession,
   getLastEmail,
   cleanEmail,
+  extractUUID,
 };
 
 export default orchestrator;
