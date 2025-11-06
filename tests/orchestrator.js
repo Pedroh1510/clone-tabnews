@@ -67,7 +67,7 @@ async function createUser(userObject) {
 }
 
 async function activateUser(createdUser) {
-  await activation.activateUserByUserId(createdUser.id);
+  return await activation.activateUserByUserId(createdUser.id);
 }
 
 async function createSession(userId) {

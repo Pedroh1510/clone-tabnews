@@ -223,7 +223,7 @@ async function hashPasswordInObject(userInputValues) {
 }
 
 async function setFeatures(userId, features) {
-  await updateUser(userId, features);
+  return updateUser(userId, features);
   async function updateUser(userId) {
     const results = await database.query({
       text: `
