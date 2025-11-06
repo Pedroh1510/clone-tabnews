@@ -30,6 +30,7 @@ describe("Use case: Registration Flow(all successful)", () => {
     expect(response.status).toBe(201);
 
     createUserResponseBody = await response.json();
+    console.log(createUserResponseBody.id);
 
     expect(createUserResponseBody).toEqual({
       id: createUserResponseBody.id,
