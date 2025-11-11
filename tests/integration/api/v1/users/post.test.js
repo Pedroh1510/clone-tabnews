@@ -135,4 +135,30 @@ describe("POST /api/v1/users", () => {
       });
     });
   });
+  describe("Default user", () => {
+    test("With logged user", async () => {
+      const createdUser = await orchestrator.createUser();
+      await orchestrator.activateUser(createdUser);
+      const sessionObject = await orchestrator.createSession(createdUser.id);
+      const response = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          Cookie: `session_id=${sessionObject.token}`,
+        },
+        body: JSON.stringify({
+          username: "notCreateUser",
+          email: "notCreateUser@curso.dev",
+          password: "senha123",
+        }),
+      });
+      expect(response.status).toEqual(403);
+      const responseBody = await response.json();
+      expect(responseBody).toEqual({
+        name: "ForbiddenError",
+        message: "Você não possui permissão para executar esta ação",
+        action: 'Verifique se seu usuário possui a feature "create:user"',
+        status_code: 403,
+      });
+    });
+  });
 });
