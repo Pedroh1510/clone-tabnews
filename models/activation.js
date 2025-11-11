@@ -1,7 +1,8 @@
 import database from "infra/database.js";
 import email from "infra/email.js";
-import { NotFoundError } from "infra/errors.js";
+import { ForbiddenError, NotFoundError } from "infra/errors.js";
 import webserver from "infra/webserver.js";
+import authorization from "models/authorization.js";
 import user from "models/user.js";
 
 const EXPIRATION_IN_MILLISECONDS = 60 * 15 * 1000;
@@ -101,10 +102,18 @@ async function markTokenAsUsed(activationToken) {
 }
 
 async function activateUserByUserId(userId) {
+  const activationUser = await user.findOneById(userId);
+  if (!authorization.can(activationUser, "read:activation_token")) {
+    throw new ForbiddenError({
+      message: "Você não possui permissão para ativar a conta",
+      action: `Contate o suporte caso você acredite que isso seja um erro`,
+    });
+  }
   return await user.setFeatures(userId, ["create:session", "read:session"]);
 }
 
 const activation = {
+  EXPIRATION_IN_MILLISECONDS,
   sendEmailToUser,
   create,
   findOneValidById,
