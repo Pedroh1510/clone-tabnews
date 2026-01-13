@@ -109,7 +109,11 @@ async function activateUserByUserId(userId) {
       action: `Contate o suporte caso você acredite que isso seja um erro`,
     });
   }
-  return await user.setFeatures(userId, ["create:session", "read:session"]);
+  return await user.setFeatures(userId, [
+    "create:session",
+    "read:session",
+    "update:user",
+  ]);
 }
 
 const activation = {
