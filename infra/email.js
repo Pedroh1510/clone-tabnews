@@ -1,3 +1,4 @@
+import { ServiceError } from "infra/errors.js";
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
@@ -11,16 +12,30 @@ const transporter = nodemailer.createTransport({
 });
 
 async function send({ from, to, subject, body, html }) {
-  const info = await transporter.sendMail({
-    from,
-    to,
-    subject,
-    text: body,
-    html,
-  });
-  return {
-    messageId: info.messageId,
-  };
+  try {
+    const info = await transporter.sendMail({
+      from,
+      to,
+      subject,
+      text: body,
+      html,
+    });
+    return {
+      messageId: info.messageId,
+    };
+  } catch (error) {
+    throw new ServiceError({
+      message: "Falha ao enviar email",
+      cause: error,
+      action: "Verifique as configurações de email e tente novamente.",
+      context: {
+        from,
+        to,
+        subject,
+        body,
+      },
+    });
+  }
 }
 
 async function verifyConnection() {
