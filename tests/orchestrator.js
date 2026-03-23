@@ -10,7 +10,6 @@ import activation from "models/activation.js";
 import webserver from "infra/webserver.js";
 
 const mailServerUrl = `http://${process.env.EMAIL_SMTP_HOST}:${process.env.EMAIL_HTTP_PORT}`;
-console.log({ mailServerUrl, webserverOrigin: webserver.origin });
 
 async function waitForAllServices() {
   await waitForWebServer();

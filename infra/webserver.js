@@ -1,6 +1,6 @@
 function getOrigin() {
   if (["test", "development"].includes(process.env.NODE_ENV)) {
-    return "http://locahost:3000";
+    return "http://localhost:3000";
   }
   if (process.env.VERSEL_ENV === "preview") {
     return `https://${process.env.VERSEL_URL}`;
