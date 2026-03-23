@@ -7,6 +7,7 @@ import user from "models/user.js";
 import session from "models/session.js";
 import email from "infra/email.js";
 import activation from "models/activation.js";
+import webserver from "infra/webserver.js";
 
 const mailServerUrl = `http://${process.env.EMAIL_SMTP_HOST}:${process.env.EMAIL_HTTP_PORT}`;
 
@@ -40,7 +41,7 @@ async function waitForAllServices() {
     });
 
     async function fetchStatusPage() {
-      const response = await fetch("http://localhost:3000/api/v1/status");
+      const response = await fetch(`${webserver.origin}/api/v1/status`);
 
       if (response.status !== 200) {
         throw Error();
