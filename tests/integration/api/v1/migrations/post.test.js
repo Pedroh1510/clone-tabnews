@@ -1,3 +1,4 @@
+import webserver from "infra/webserver.js";
 import orchestrator from "tests/orchestrator.js";
 
 beforeAll(async () => {
@@ -9,7 +10,7 @@ beforeAll(async () => {
 describe("POST /api/v1/migrations", () => {
   describe("Anonymous user", () => {
     test("Try run pending migrations", async () => {
-      const response1 = await fetch("http://localhost:3000/api/v1/migrations", {
+      const response1 = await fetch(`${webserver.origin}/api/v1/migrations`, {
         method: "POST",
       });
       expect(response1.status).toBe(403);
@@ -31,7 +32,7 @@ describe("POST /api/v1/migrations", () => {
       const defaultUserSession = await orchestrator.createSession(
         defaultUser.id,
       );
-      const response1 = await fetch("http://localhost:3000/api/v1/migrations", {
+      const response1 = await fetch(`${webserver.origin}/api/v1/migrations`, {
         method: "POST",
         headers: {
           Cookie: `session_id=${defaultUserSession.token}`,
@@ -63,15 +64,12 @@ describe("POST /api/v1/migrations", () => {
         const privilegedUserSession = await orchestrator.createSession(
           privilegedUser.id,
         );
-        const response2 = await fetch(
-          "http://localhost:3000/api/v1/migrations",
-          {
-            method: "POST",
-            headers: {
-              Cookie: `session_id=${privilegedUserSession.token}`,
-            },
+        const response2 = await fetch(`${webserver.origin}/api/v1/migrations`, {
+          method: "POST",
+          headers: {
+            Cookie: `session_id=${privilegedUserSession.token}`,
           },
-        );
+        });
         expect(response2.status).toBe(200);
 
         const response2Body = await response2.json();
