@@ -41,7 +41,7 @@ async function send({ from, to, subject, body, html }) {
 async function verifyConnection() {
   try {
     return transporter.verify();
-  } catch (error) {
+  } catch {
     return false;
   }
 }
