@@ -25,6 +25,8 @@ async function getNewClient() {
     user: process.env.POSTGRES_USER,
     database: process.env.POSTGRES_DB,
     password: process.env.POSTGRES_PASSWORD,
+    enableChannelBinding:
+      process.env.POSTGRES_ENABLE_CHANNEL_BINDING === "true",
     ssl: getSSLValues(),
   });
 
@@ -44,6 +46,9 @@ function getSSLValues() {
     return {
       ca: process.env.POSTGRES_CA,
     };
+  }
+  if (process.env.POSTGRES_ENABLE_SSL === "true") {
+    return true;
   }
 
   return process.env.NODE_ENV === "production" ? true : false;

@@ -5,22 +5,11 @@ services:
     env_file:
       - ../.env.development
     ports:
-      - "5555:5432"
+      - "5432:5432"
   mail:
     image: axllent/mailpit
     container_name: mail
     restart: unless-stopped
-    volumes:
-      - mailpit:/data
     ports:
-      - 5556:8025
-      - 5557:1025
-    environment:
-      MP_MAX_MESSAGES: 5000
-      MP_MAX_AGE: 1d
-      MP_DATABASE: /data/mailpit.db
-      MP_SMTP_AUTH_ACCEPT_ANY: 1
-      MP_SMTP_AUTH_ALLOW_INSECURE: 1
-
-volumes:
-  mailpit:
+      - 8025:8025
+      - 1025:1025

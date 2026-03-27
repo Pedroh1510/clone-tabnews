@@ -13,15 +13,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "lts/hydrogen"
+          node-version-file: "package.json"
           cache: "npm"
 
       - run: npm ci
 
       - run: npm test
-        env:
-          POSTGRES_HOST: database
-          POSTGRES_PORT: 5432
-          EMAIL_SMTP_HOST: mail
-          EMAIL_SMTP_PORT: 1025
-          EMAIL_HTTP_PORT: 8025

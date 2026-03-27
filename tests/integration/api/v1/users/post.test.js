@@ -31,10 +31,9 @@ describe("POST /api/v1/users", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: "filipedeschamps",
-        email: "contato@curso.dev",
-        password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
+        features: ["read:activation_token"],
       });
 
       expect(uuidVersion(responseBody.id)).toBe(4);
@@ -131,6 +130,32 @@ describe("POST /api/v1/users", () => {
         message: "O username informado já está sendo utilizado.",
         action: "Utilize outro username para realizar esta operação.",
         status_code: 400,
+      });
+    });
+  });
+  describe("Default user", () => {
+    test("With logged user", async () => {
+      const createdUser = await orchestrator.createUser();
+      await orchestrator.activateUser(createdUser);
+      const sessionObject = await orchestrator.createSession(createdUser.id);
+      const response = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          Cookie: `session_id=${sessionObject.token}`,
+        },
+        body: JSON.stringify({
+          username: "notCreateUser",
+          email: "notCreateUser@curso.dev",
+          password: "senha123",
+        }),
+      });
+      expect(response.status).toEqual(403);
+      const responseBody = await response.json();
+      expect(responseBody).toEqual({
+        name: "ForbiddenError",
+        message: "Você não possui permissão para executar esta ação",
+        action: 'Verifique se seu usuário possui a feature "create:user"',
+        status_code: 403,
       });
     });
   });

@@ -6,6 +6,8 @@ import migrator from "models/migrator.js";
 import user from "models/user.js";
 import session from "models/session.js";
 import email from "infra/email.js";
+import activation from "models/activation.js";
+import webserver from "infra/webserver.js";
 
 const mailServerUrl = `http://${process.env.EMAIL_SMTP_HOST}:${process.env.EMAIL_HTTP_PORT}`;
 
@@ -39,7 +41,7 @@ async function waitForAllServices() {
     });
 
     async function fetchStatusPage() {
-      const response = await fetch("http://localhost:3000/api/v1/status");
+      const response = await fetch(`${webserver.origin}/api/v1/status`);
 
       if (response.status !== 200) {
         throw Error();
@@ -65,6 +67,10 @@ async function createUser(userObject) {
   });
 }
 
+async function activateUser(createdUser) {
+  return await activation.activateUserByUserId(createdUser.id);
+}
+
 async function createSession(userId) {
   return await session.create(userId);
 }
@@ -87,14 +93,28 @@ async function cleanEmail() {
   await fetch(`${mailServerUrl}/api/v1/messages`, { method: "DELETE" });
 }
 
+function extractUUID(text) {
+  const match = text.match(
+    "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+  );
+  return match[0] || null;
+}
+
+async function addFeaturesToUser(userObject, features) {
+  return await user.addFeatures(userObject.id, features);
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
   runPendingMigrations,
   createUser,
+  activateUser,
   createSession,
   getLastEmail,
   cleanEmail,
+  extractUUID,
+  addFeaturesToUser,
 };
 
 export default orchestrator;
