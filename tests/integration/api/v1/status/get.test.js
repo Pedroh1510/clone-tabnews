@@ -34,9 +34,7 @@ describe("GET /api/v1/status", () => {
     test("Retrieving current system status", async () => {
       const defaultUser = await orchestrator.createUser();
       await orchestrator.activateUser(defaultUser);
-      const defaultUserSession = await orchestrator.createSession(
-        defaultUser.id,
-      );
+      const defaultUserSession = await orchestrator.createSession(defaultUser);
       const response = await fetch(`${webserver.origin}/api/v1/status`, {
         headers: {
           Cookie: `session_id=${defaultUserSession.token}`,
@@ -66,9 +64,8 @@ describe("GET /api/v1/status", () => {
       const privilegedUser = await orchestrator.createUser();
       await orchestrator.activateUser(privilegedUser);
       await orchestrator.addFeaturesToUser(privilegedUser, ["read:status:all"]);
-      const privilegedUserSession = await orchestrator.createSession(
-        privilegedUser.id,
-      );
+      const privilegedUserSession =
+        await orchestrator.createSession(privilegedUser);
       const response = await fetch(`${webserver.origin}/api/v1/status`, {
         headers: {
           Cookie: `session_id=${privilegedUserSession.token}`,
