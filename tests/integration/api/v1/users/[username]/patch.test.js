@@ -11,7 +11,7 @@ beforeAll(async () => {
 
 describe("PATCH /api/v1/users/[username]", () => {
   describe("Anonymous user", () => {
-    test("With nonexistent 'username'", async () => {
+    test("With nonexistent `username`", async () => {
       await orchestrator.createUser();
       const response = await fetch(
         "http://localhost:3000/api/v1/users/UsuarioInexistente",
@@ -33,7 +33,7 @@ describe("PATCH /api/v1/users/[username]", () => {
     });
   });
   describe("Default user", () => {
-    test("With nonexistent 'username'", async () => {
+    test("With nonexistent `username`", async () => {
       const userCreated = await orchestrator.createUser();
       await orchestrator.activateUser(userCreated);
       const sessionObject = await orchestrator.createSession(userCreated.id);
@@ -59,7 +59,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With duplicated 'username'", async () => {
+    test("With duplicated `username`", async () => {
       await orchestrator.createUser({
         username: "user1",
       });
@@ -130,7 +130,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With duplicated 'email'", async () => {
+    test("With duplicated `email`", async () => {
       await orchestrator.createUser({
         email: "email1@curso.dev",
       });
@@ -168,7 +168,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With unique 'username'", async () => {
+    test("With unique `username`", async () => {
       const createdUser = await orchestrator.createUser();
 
       await orchestrator.activateUser(createdUser);
@@ -213,7 +213,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
     });
 
-    test("With unique 'email'", async () => {
+    test("With unique `email`", async () => {
       const createdUser = await orchestrator.createUser();
 
       await orchestrator.activateUser(createdUser);
@@ -261,7 +261,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(userInDatabase.email).toEqual("uniqueEmail2@curso.dev");
     });
 
-    test("With new 'password'", async () => {
+    test("With new `password`", async () => {
       const createdUser = await orchestrator.createUser({
         password: "newPassword1",
       });
